@@ -1,0 +1,38 @@
+---
+# defaults file for nginx-install
+
+
+# Will the webserver host more than one website? This determines where to place the logs among other things.
+nginx_install_shared_webserver: false
+
+# The non-root linux user that NginX will run as. The default is "www-data"
+nginx_install_nginx_user: "www-data"
+
+# The number of NGINX worker processes (the default is auto)
+nginx_install_nginx_worker_processes: auto
+# The maximum number of connections that each worker process can handle simultaneously.
+nginx_install_nginx_worker_connections: 1024
+
+# Specify source repository for NGINX Open Source.
+# Only works if 'nginx_install_nginx_install_from' is set to 'nginx_repository'.
+# Defaults are the official NGINX repositories.
+nginx_install_nginx_repository:
+  debian:
+    - deb https://nginx.org/packages/{{ (nginx_install_nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} nginx
+    - deb-src https://nginx.org/packages/{{ (nginx_install_nginx_branch == 'mainline') | ternary('mainline/', '') }}{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} nginx
+    
+# Specify repository origin for NGINX Open Source.
+# Options are 'nginx_repository' or 'os_repository'.
+# Default is nginx_repository.
+nginx_install_nginx_install_from: nginx_repository
+
+# Specify which branch of NGINX Open Source you want to install.
+# Options are 'mainline' or 'stable'.
+# Only works if 'install_from' is set to 'nginx_repository'.
+# Default is mainline.
+nginx_install_nginx_branch: stable
+
+
+
+
+

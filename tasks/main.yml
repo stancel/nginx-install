@@ -1,0 +1,70 @@
+---
+# tasks file for nginx-install
+
+- set_fact: fallback_keyserver='hkp://p80.pool.sks-keyservers.net:80'
+  when: (ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie') or
+        (ansible_distribution == 'Ubuntu' and ansible_distribution_release in ['trusty', 'xenial'])
+
+- name: "(Install: APT OSs) Add APT NGINX Signing Key"
+  apt_key:
+    id: 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
+    keyserver: "{{ fallback_keyserver | default('hkps://hkps.pool.sks-keyservers.net:443') }}"
+
+- name: "Install NGINX from NginX official repository"
+  block:
+
+    - name: "(Install: Debian/Ubuntu) Add NGINX Official Repository"
+      apt_repository:
+        repo: "{{ item }}"
+      with_items:
+       - "{{ nginx_install_nginx_repository.debian }}"
+
+    - name: "Install NGINX"
+      package:
+        name: nginx
+        state: present
+      notify: "Start NGINX"
+
+  when: nginx_install_nginx_install_from == "nginx_repository"
+
+- name: "Install NGINX from the Debian/Ubuntu default OS repository"
+  block:
+
+    - name: "(Install: Debian/Ubuntu) Install NGINX from OS Repo"
+      package:
+        name: nginx
+        state: present
+     notify: "Start NGINX"
+
+  when: nginx_install_nginx_install_from == "os_repository"
+
+- name: "Check for dhparam.pem (Diffe Hellman Key Exchange Params)"
+  stat: path=/etc/nginx/dhparam.pem
+  register: dhparam
+
+- name: "Generate dhparam"
+  command: openssl dhparam -out /etc/nginx/dhparam.pem 4096
+  when: dhparam.stat.exists == false
+
+- name: "Copy nginx.conf configuration"
+  template: 
+    src: nginx.conf.j2 
+    dest: /etc/nginx/nginx.conf 
+    owner: root 
+    group: root
+  
+- name: "Ensure NginX service is up"
+  service: 
+    name: nginx 
+    state: started
+    enabled: yes
+
+- name: "Restart NginX"
+  service: 
+    name: nginx 
+    state: restart
+
+
+
+
+
