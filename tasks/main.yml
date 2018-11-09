@@ -43,7 +43,7 @@
   register: dhparam
 
 - name: "Generate dhparam"
-  command: openssl dhparam -out /etc/nginx/dhparam.pem 4096
+  command: openssl dhparam -out /etc/nginx/dhparam.pem 2048
   when: dhparam.stat.exists == false
 
 - name: "Copy nginx.conf configuration"
