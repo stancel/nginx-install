@@ -34,7 +34,7 @@
       package:
         name: nginx
         state: present
-     notify: "Start NGINX"
+      notify: "Start NGINX"
 
   when: nginx_install_nginx_install_from == "os_repository"
 
