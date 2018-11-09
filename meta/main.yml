@@ -1,7 +1,7 @@
 galaxy_info:
   author: "Brad Stancel"
   
-  description: "Install the open source version of NginX and copies over a customized main nginx.conf configuration file. This role does not add the virtual hosts/server blocks needed for any websites that will run on the webserver. Separate roles, stancel.nginx_site_setup and stancel.nginx_site_removal cover the adding or removal of any virtual hosts."
+  description: "Install the open source version of NginX and copies over a customized main nginx.conf configuration file. Does not add the virtual hosts/server blocks."
   
   company: YourOnlineDept.com
 
