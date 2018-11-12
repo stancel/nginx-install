@@ -3,6 +3,11 @@ user {{ nginx_install_nginx_user }};
 # Performance
 worker_processes {{ nginx_install_nginx_worker_processes }};
 
+# Maximum number of open files per worker process.
+# Should be > worker_connections.
+# Default: no limit
+worker_rlimit_nofile {{ nginx_install_nginx_worker_rlimit_nofile }};
+
 pid /run/nginx.pid;
 include /etc/nginx/modules-enabled/*.conf;
 
@@ -27,6 +32,18 @@ http {
   open_file_cache_min_uses 3;
   open_file_cache_errors   off;
 
+  # Setup the fastcgi cache.
+  fastcgi_buffers {{ nginx_install_nginx_fastcgi_buffers }};
+  fastcgi_buffer_size {{ nginx_install_nginx_fastcgi_buffer_size }};
+  fastcgi_read_timeout {{ nginx_install_nginx_fastcgi_read_timeout }};
+  fastcgi_cache_path {{ nginx_install_nginx_cache_path }} levels=1:2 keys_zone=wordpress:{{ nginx_install_nginx_cache_key_storage_size }} max_size={{ nginx_install_nginx_cache_size }} inactive={{ nginx_install_nginx_cache_inactive }};
+  fastcgi_cache_use_stale updating error timeout invalid_header http_500;
+  fastcgi_cache_lock on;
+  fastcgi_cache_key $realpath_root$scheme$host$request_uri$request_method$http_origin;
+  fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+  fastcgi_pass_header Set-Cookie;
+  fastcgi_pass_header Cookie;
+
   include /etc/nginx/mime.types;
   default_type application/octet-stream;
 
@@ -45,7 +62,38 @@ http {
   gzip_buffers 16 8k;
   gzip_http_version 1.1;
   gzip_min_length 256;
-  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/vnd.ms-fontobject application/x-font-ttf font/opentype image/svg+xml image/x-icon;
+  gzip_types 
+    application/atom+xml 
+    application/javascript 
+    application/ld+json 
+    application/manifest+json 
+    application/vnd.geo+json 
+    application/x-web-app-manifest+json 
+    application/xhtml+xml 
+    text/cache-manifest 
+    text/vcard 
+    text/vnd.rim.location.xloc 
+    text/vtt 
+    text/x-component 
+    text/x-cross-domain-policy  
+    text/plain 
+    text/css 
+    application/json 
+    application/x-javascript 
+    text/xml 
+    application/xml 
+    application/rss+xml 
+    text/javascript 
+    application/vnd.ms-fontobject 
+    application/x-font-ttf 
+    font/opentype 
+    image/bmp 
+    image/png 
+    image/gif 
+    image/jpeg 
+    image/jpg  
+    image/svg+xml 
+    image/x-icon;
 
   # Virtual Host Configs
   include /etc/nginx/conf.d/*.conf;

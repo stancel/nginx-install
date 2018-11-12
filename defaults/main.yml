@@ -11,7 +11,18 @@ nginx_install_nginx_user: "www-data"
 # The number of NGINX worker processes (the default is auto)
 nginx_install_nginx_worker_processes: auto
 # The maximum number of connections that each worker process can handle simultaneously.
-nginx_install_nginx_worker_connections: 1024
+nginx_install_nginx_worker_connections: 8000
+# Maximum number of open files per worker process. Should be > worker_connections.
+nginx_install_nginx_worker_rlimit_nofile: 8192
+
+# Fastcgi cache params
+nginx_install_nginx_fastcgi_buffers: 8 8k
+nginx_install_nginx_fastcgi_buffer_size: 8k
+nginx_install_nginx_fastcgi_read_timeout: 120s
+nginx_install_nginx_cache_path: /var/cache/nginx
+nginx_install_nginx_cache_key_storage_size: 10m
+nginx_install_nginx_cache_size: 250m
+nginx_install_nginx_cache_inactive: 1h
 
 # Specify source repository for NGINX Open Source.
 # Only works if 'nginx_install_nginx_install_from' is set to 'nginx_repository'.
