@@ -15,9 +15,7 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - bionic
-  - name: Debian
-    versions:
-    - stretch
+    - focal
 
   galaxy_tags: 
     - nginx
