@@ -1,9 +1,9 @@
 ---
 # tasks file for nginx-install
 
-- set_fact: fallback_keyserver='hkp://p80.pool.sks-keyservers.net:80'
+- set_fact: fallback_keyserver='https://nginx.org/keys/nginx_signing.key'
   when: (ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie') or
-        (ansible_distribution == 'Ubuntu' and ansible_distribution_release in ['trusty', 'xenial'])
+        (ansible_distribution == 'Ubuntu' and ansible_distribution_release in ['trusty', 'xenial', 'focal'])
 
 - name: "(Install: APT OSs) Add APT NGINX Signing Key"
   apt_key:
@@ -63,8 +63,3 @@
   service: 
     name: nginx 
     state: restarted
-
-
-
-
-
