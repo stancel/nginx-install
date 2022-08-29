@@ -53,11 +53,11 @@
     owner: root 
     group: root
   
-- name: "Ensure NginX service is up"
-  service: 
-    name: nginx 
-    state: started
-    enabled: yes
+#- name: "Ensure NginX service is up"
+#  service: 
+#    name: nginx 
+#    state: started
+#    enabled: yes
 
 # DO NOT RESTART NGINX UNTIL AFTER stancel.install_certbot_ssl_certs has run
 #- name: "Restart NginX"
